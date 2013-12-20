@@ -1,0 +1,18 @@
+name = Comment Easy Reply
+description = Provides comment numeration and a new way to reply to comments.
+core = 7.x
+package = Comments
+configure = admin/config/content/comment-easy-reply
+dependencies[] = comment
+files[] = views/views_handler_field_comment_easy_reply_link_reply.inc
+files[] = views/views_handler_field_comment_easy_reply_comment_body.inc
+files[] = views/views_handler_field_comment_easy_reply_comment_number.inc
+files[] = views/views_handler_sort_comment_easy_reply_comment_number.inc
+files[] = views/views_handler_field_comment_easy_reply_link_quote.inc
+
+; Information added by drupal.org packaging script on 2013-04-06
+version = "7.x-1.6"
+core = "7.x"
+project = "comment_easy_reply"
+datestamp = "1365249620"
+
