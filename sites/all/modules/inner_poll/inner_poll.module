@@ -12,6 +12,40 @@
 define('ANSWER_PROPERTY', 999);
 define('CUSTOM_TEXT_PROPERTY', 333);
 
+
+
+function inner_poll_install() {
+    //drupal_install_schema('inner_poll');
+    db_query('
+    ALTER TABLE {inner_poll_votes}
+    MODIFY chtime TIMESTAMP NOT NULL
+    DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP'
+  );
+  db_query('
+    ALTER TABLE {inner_poll_choices}
+    MODIFY chtime TIMESTAMP NOT NULL
+    DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP'
+  );
+}
+
+
+function inner_poll_enable() {
+    db_query('
+    ALTER TABLE {inner_poll_votes}
+    MODIFY chtime TIMESTAMP NOT NULL
+    DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP'
+  );
+  db_query('
+    ALTER TABLE {inner_poll_choices}
+    MODIFY chtime TIMESTAMP NOT NULL
+    DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP'
+  );
+}
+
 /**
  * Implements hook_permission().
  *
