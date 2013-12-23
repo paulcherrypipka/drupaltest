@@ -1033,7 +1033,6 @@ function theme_inner_poll_vote_form($variables) {
         }
 
         $user_votes = array();
-
         foreach ($result_ipc as $row) {
           if ($row->chorder != ANSWER_PROPERTY) {
             $user_votes[] = $row->chtext;
@@ -1061,11 +1060,48 @@ function theme_inner_poll_vote_form($variables) {
           ->execute();
 
         // Загрузка ответов и голосов за них.
+        $counter_custom_answers = 0;
+        $custom_results = array(
+          'text' => 'Свой вариант',
+          'votes' => 0,
+        );
+        // Получаем кол-во только шаблонных ответов
+        $count_template_choices = 0;
+        $count_template_choices = db_select('inner_poll_choices', 'pc')
+          ->condition('pc.chorder', 333, '<>')
+          ->condition('pc.chorder', 999, '<>')
+          ->condition('pc.nid', $variables['nid'])
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+
         foreach ($result_answers as $row_answers) {
           $sum += $row_answers->chvotes;
-          $results[$i]['text'] = $row_answers->chtext;
-          $results[$i]['votes'] = $row_answers->chvotes;
 
+          if ($row_answers->chorder != CUSTOM_TEXT_PROPERTY) {
+            $results[$i]['text'] = $row_answers->chtext;
+            $results[$i]['votes'] = $row_answers->chvotes;
+          }
+          else {
+            $custom_results['votes'] += $row_answers->chvotes;
+          }
+
+          /*if ($i == 0) {
+            $max = $i;
+          }
+          else {
+            if ($results[$i]['votes'] > $results[$i - 1]['votes']) {
+              $max = $i;
+            }
+          }*/
+
+          $i++;
+        }
+        if ($custom_results['votes'] > 0) {
+          $results[] = $custom_results;
+        }
+        $i = 0;
+        foreach ($results as $res) {
           if ($i == 0) {
             $max = $i;
           }
@@ -1077,6 +1113,7 @@ function theme_inner_poll_vote_form($variables) {
 
           $i++;
         }
+
 
         $res = "<div class=\"inner_poll_container\">";
 
