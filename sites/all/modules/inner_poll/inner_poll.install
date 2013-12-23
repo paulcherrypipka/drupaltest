@@ -60,6 +60,17 @@ function inner_poll_schema() {
         'not null' => TRUE,
         'default' => 1,
       ),
+      'chuid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'chtime' => array(
+        'type' => 'timestamp',
+        'not null' => TRUE,
+        'default' => CURRENT_TIMESTAMP,
+      ),
     ),
     'indexes' => array(
       'nid' => array('nid'),
@@ -94,6 +105,11 @@ function inner_poll_schema() {
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
+      ),
+      'chtime' => array(
+          'type' => 'timestamp',
+          'not null' => TRUE,
+          'default' => CURRENT_TIMESTAMP,
       ),
     ),
     'indexes' => array(

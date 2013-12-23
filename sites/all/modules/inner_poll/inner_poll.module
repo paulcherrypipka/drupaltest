@@ -70,6 +70,15 @@ function inner_poll_menu() {
     'access arguments' => array('administer site configuration')
   );
 
+  //poll-votes
+  $items['poll-votes/%'] = array(
+    'title' => 'Inner poll votes statistics',
+    'page callback' => 'inner_poll_statistics_page',
+    'page arguments' => array(1),
+    'access arguments' => array('vote on inner polls'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -476,14 +485,15 @@ function _add_new_poll($node) {
           'cancel' => $cancel
         ))
           ->execute();
-
+        global $user;
         for ($i = 0; $i <= count($choices) - 1; $i++) {
           db_insert('inner_poll_choices')
             ->fields(array(
             'nid' => $node->nid,
             'chtext' => $choices[$i],
             'chvotes' => 0,
-            'chorder' => $i
+            'chorder' => $i,
+            'chuid' => 0,
           ))
             ->execute();
         }
@@ -493,7 +503,8 @@ function _add_new_poll($node) {
           'nid' => $node->nid,
           'chtext' => $question,
           'chvotes' => 0,
-          'chorder' => ANSWER_PROPERTY
+          'chorder' => ANSWER_PROPERTY,
+          'chuid' => 0,
         ))
           ->execute();
       }
@@ -570,7 +581,7 @@ function _update_poll($node) {
             ->countQuery()
             ->execute()
             ->fetchField();
-
+          global $user;
           // Добавляем или обновляем данные в зависимости от того существует или нет запись с данным вопросом.
           if ($count == 0) {
             db_insert('inner_poll_choices')
@@ -579,6 +590,7 @@ function _update_poll($node) {
               'chtext' => $choices[$i],
               'chvotes' => 0,
               'chorder' => $i,
+              'chuid' => 0,
             ))
               ->execute();
           }
@@ -620,6 +632,7 @@ function _update_poll($node) {
           'chtext' => $question,
           'chvotes' => 0,
           'chorder' => ANSWER_PROPERTY,
+          'chuid' => 0,
         ))
           ->execute();
       }
@@ -787,6 +800,7 @@ function inner_poll_vote_js() {
             'chtext' => $votes[$i],
             'chvotes' => 1,
             'chorder' => 333,
+            'chuid' => $user->uid,
           ))
           ->execute();
 
@@ -1064,6 +1078,8 @@ function theme_inner_poll_vote_form($variables) {
         $custom_results = array(
           'text' => 'Свой вариант',
           'votes' => 0,
+          'nid' => $variables['nid'],
+          'chorder' => 333,
         );
         // Получаем кол-во только шаблонных ответов
         $count_template_choices = 0;
@@ -1081,6 +1097,8 @@ function theme_inner_poll_vote_form($variables) {
           if ($row_answers->chorder != CUSTOM_TEXT_PROPERTY) {
             $results[$i]['text'] = $row_answers->chtext;
             $results[$i]['votes'] = $row_answers->chvotes;
+            $results[$i]['nid'] = $row_answers->nid;
+            $results[$i]['chorder'] = $row_answers->chorder;
           }
           else {
             $custom_results['votes'] += $row_answers->chvotes;
@@ -1134,7 +1152,7 @@ function theme_inner_poll_vote_form($variables) {
                        <div class=\"points\">(" . $results[$i]['votes'] . ")</div>
                      </div>
                      <div class=\"inner_poll_answer_wrapper\">
-                       <div class=\"inner_poll_answer\">" . $results[$i]['text'] . "</div>
+                       <div class=\"inner_poll_answer\">" . l($results[$i]['text'], 'poll-votes/' . $results[$i]['nid'], array('query' => array('chorder' => $results[$i]['chorder']))) . "</div>
                        <div class=\"inner_poll_grafic" . ($max == $i ? " inner_poll_max_result" : "") . "\" style=\"width: " . $width_results . "px\"></div>
                      </div>
                    </div>
@@ -1326,4 +1344,50 @@ function inner_poll_help($path, $arg) {
       $output .= '<br><p>' . t('The Inner Poll module can be used to create simple surveys or questionnaires that display cumulative results. A poll is a good way to receive feedback from site users and community members.') . '</p><br>';
       return $output;
   }
+}
+
+function inner_poll_statistics_page($target_nid = 0) {
+  $output = '';
+  $header = array(
+    array('data'=>'Пользователь', 'field'=>'name'),
+    array('data'=>'Ответ', 'field'=>'chtext'),
+    array('data'=>'Дата и время', 'field'=>'chtime'),
+  );
+  if ((int)$target_nid != 0 && $target_nid != '' && isset($_GET['chorder'])) {
+    if ((int)$_GET['chorder'] == CUSTOM_TEXT_PROPERTY) {
+      // 1. get votes for target_nid
+      $query = db_select('inner_poll_choices', 'pc');
+      $query->join('users', 'u', 'u.uid=pc.chuid');
+      $query->condition('pc.chorder', CUSTOM_TEXT_PROPERTY, '=');
+      $query->fields('u', array('name'))
+        ->fields('pc', array('chtext'))
+        ->fields('pc', array('chtime'));
+
+      $vote_results = $query->execute();
+
+      $rows = array();
+      while ($vote = $vote_results->fetchAssoc()) {
+        $rows[] = $vote;
+      }
+    }
+    else {
+      $query = db_select('inner_poll_votes', 'pv');
+      $query->join('users', 'u', 'u.uid=pv.uid');
+      $query->join('inner_poll_choices', 'pc', 'pv.chorder=pc.chorder');
+      $query->condition('pc.chorder', CUSTOM_TEXT_PROPERTY, '<>')
+        ->fields('u', array('name'))
+        ->fields('pc', array('chtext'))
+        ->fields('pv', array('chtime'));
+
+      $vote_results = $query->execute();
+
+      $rows = array();
+      while ($vote = $vote_results->fetchAssoc()) {
+        $rows[] = $vote;
+      }
+    }
+    // 2. theming output table
+    $output .= theme('table', array('header' => $header,'rows' => $rows));
+  }
+  return $output;
 }
