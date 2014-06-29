@@ -1,0 +1,22 @@
+name = Views nodejs
+description = Dynamically update of views by nodejs after executing rules action.
+package = Views
+core = 7.x
+
+dependencies[] = views
+dependencies[] = rules
+dependencies[] = nodejs
+
+; Information added by drupal.org packaging script on 2013-07-29
+version = "7.x-1.0"
+core = "7.x"
+project = "views_nodejs"
+datestamp = "1375078590"
+
+
+; Information added by drupal.org packaging script on 2013-10-27
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "async_drupal"
+datestamp = "1382874927"
+

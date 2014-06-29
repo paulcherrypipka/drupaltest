@@ -1,0 +1,23 @@
+name = Url formatter
+description = Change url to some format like image or video, etc.
+
+core = 7.x
+dependencies[] = text
+
+files[] = includes/UrlFormatter.inc
+files[] = includes/UrlFormatterImage.inc
+files[] = includes/UrlFormatterYoutube.inc
+
+; Information added by drupal.org packaging script on 2013-10-01
+version = "7.x-1.0-alpha1+3-dev"
+core = "7.x"
+project = "url_formatter"
+datestamp = "1380642844"
+
+
+; Information added by drupal.org packaging script on 2013-10-27
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "async_drupal"
+datestamp = "1382874927"
+
