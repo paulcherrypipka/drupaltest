@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function adyax_test_ctools_plugin_api($owner, $api) {
+  if ($owner == 'panels') {
+    return array('version' => 2.0);
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function adyax_test_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools') {
+    return 'plugins/content_types';
+  }
+}

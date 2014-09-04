@@ -1,0 +1,5 @@
+name = Adyax Test
+description = Content type plugin adyax_test
+core = 7.x
+
+dependencies[] = ctools
