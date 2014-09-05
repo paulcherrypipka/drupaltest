@@ -22,9 +22,8 @@ function adyax_test_adyaxtest_ctools_content_types() {
  * Output function for the content type
  */
 function adyax_test_adyaxtest_content_type_render($subtype, $conf, $panel_args,  $contexts) {
-  //drupal_add_css('div.pane-adyaxtest {border: 5px solid gray!important; border-radius: 10px!important;}');
-  $block = new stdClass();
 
+  // Getting 3 random published nodes
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->condition('n.status', 1, '=')
@@ -37,14 +36,17 @@ function adyax_test_adyaxtest_content_type_render($subtype, $conf, $panel_args, 
   $rendered_nodes = array();
   foreach($results as $result) {
     $node = node_load($result);
+    // Load node parameters for render in teaser view mode
     $node_params = node_view($node, 'teaser');
     $rendered_nodes[] = drupal_render($node_params);
   }
 
+  // Create block with for display nodes
+  $block = new stdClass();
   $block->content = array(
     '#theme' => 'adyax_test_adyaxtheme_full',
     '#nodes' => $rendered_nodes,
-    //'#border_style' => $conf['border_width'],
+    '#border_width' => $conf['border_width'],
   );
 
   return $block;
@@ -59,7 +61,7 @@ function adyax_test_adyaxtest_theme(&$theme, $plugin) {
     'template' => 'adyaxtest-full',
     'variables' => array(
       'nodes' => array(),
-      //'border_style' => 1,
+      'border_width' => NULL,
     ),
   );
 }
@@ -70,6 +72,7 @@ function adyax_test_adyaxtest_theme(&$theme, $plugin) {
 function adyax_test_adyaxtest_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
 
+  // Create field for custom border width style
   $form['border_width'] = array(
     '#type'    => 'textfield',
     '#title'   => t('Border width'),
@@ -84,8 +87,13 @@ function adyax_test_adyaxtest_content_type_edit_form($form, &$form_state) {
  *Settings form submit handler
  */
 function adyax_test_adyaxtest_content_type_edit_form_submit(&$form, &$form_state) {
-  // Copy everything from our defaults.
   foreach (array_keys($form_state['plugin']['defaults']) as $key) {
     $form_state['conf'][$key] = $form_state['values'][$key];
+  }
+}
+
+function adyax_test_adyaxtest_content_type_edit_form_validate(&$form, &$form_state) {
+  if (!is_numeric($form_state['values']['border_width'])) {
+    form_set_error('edit-border-width', t('Border width value must be a numeric value'));
   }
 }

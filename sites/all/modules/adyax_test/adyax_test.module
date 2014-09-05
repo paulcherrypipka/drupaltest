@@ -17,3 +17,12 @@ function adyax_test_ctools_plugin_directory($module, $plugin) {
     return 'plugins/content_types';
   }
 }
+
+
+function adyax_test_preprocess_adyax_test_adyaxtheme_full(&$vars) {
+  if (is_numeric($vars['border_width'])) {
+    $vars['attributes_array'] = array(
+      'style' => 'border: ' . $vars['border_width'] . 'px solid gray!important; border-radius: 10px!important;',
+    );
+  }
+}
