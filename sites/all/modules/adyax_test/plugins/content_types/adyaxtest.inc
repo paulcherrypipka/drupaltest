@@ -1,5 +1,10 @@
 <?php
 
+/* @file
+ * Plugin for output three random nodes in teaser
+ * view mode.
+ */
+
 /**
  * Callback function to supply a list of content types.
  */
@@ -12,8 +17,6 @@ function adyax_test_adyaxtest_ctools_content_types() {
     'render callback' => 'adyax_test_adyaxtest_content_type_render',
     'edit form' => 'adyax_test_adyaxtest_content_type_edit_form',
     'category' => t('Adyaxtest'),
-    'all contexts' => TRUE,
-    'hook theme' => 'adyax_test_adyaxtest_theme',
     'defaults' => array('border_width' => 1),
   );
 }
@@ -53,21 +56,7 @@ function adyax_test_adyaxtest_content_type_render($subtype, $conf, $panel_args, 
 }
 
 /**
- * Implementation of hook_theme().
- */
-function adyax_test_adyaxtest_theme(&$theme, $plugin) {
-  $theme['adyax_test_adyaxtheme_full'] = array(
-    'path' => $plugin['path'],
-    'template' => 'adyaxtest-full',
-    'variables' => array(
-      'nodes' => array(),
-      'border_width' => NULL,
-    ),
-  );
-}
-
-/**
- *Building settings form
+ * Building settings form
  */
 function adyax_test_adyaxtest_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
@@ -84,7 +73,7 @@ function adyax_test_adyaxtest_content_type_edit_form($form, &$form_state) {
 }
 
 /**
- *Settings form submit handler
+ * Settings form submit handler
  */
 function adyax_test_adyaxtest_content_type_edit_form_submit(&$form, &$form_state) {
   foreach (array_keys($form_state['plugin']['defaults']) as $key) {
@@ -92,6 +81,9 @@ function adyax_test_adyaxtest_content_type_edit_form_submit(&$form, &$form_state
   }
 }
 
+/**
+ * Settings form validate handler
+ */
 function adyax_test_adyaxtest_content_type_edit_form_validate(&$form, &$form_state) {
   if (!is_numeric($form_state['values']['border_width'])) {
     form_set_error('edit-border-width', t('Border width value must be a numeric value'));
