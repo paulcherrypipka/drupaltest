@@ -1,0 +1,29 @@
+<?php 
+/**
+ * Implementation of hook_hook_block_info()
+ */
+function simpledisplay_block_info() {
+	return array(
+		'simpledisplay' => array(
+			'info' => 'Simple display'
+		)
+	);
+}
+
+function simpledisplay_block_view($delta = ''){
+	if ($delta == 'simpledisplay'){
+		return array(
+			'subject'=> t('Simple module subject'),
+			'content'=> 'Simple module content'
+			);
+	}
+}
+
+function simpledisplay_block_view_alter(&$data, $block){
+	if ($block->delta == 'simpledisplay' && $block->module == 'simpledisplay'){		
+		$data['content'] = 'Simple module content altered';
+		$data['title'] = t('Simple module subject altered');
+	}
+}
+
+?>

@@ -1,0 +1,6 @@
+name = Inner Poll
+description = "Allows your site to capture votes on different topics in the form of multiple choice questions.<br>Add poll to the any node." 
+
+core = 7.x
+
+configure = admin/config/user-interface/inner-poll
