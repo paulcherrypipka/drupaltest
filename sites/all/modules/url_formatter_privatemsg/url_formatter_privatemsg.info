@@ -1,0 +1,20 @@
+name = Url formatter with Private messages
+description = Change url to some format like image or video in Private messages.
+
+core = 7.x
+dependencies[] = privatemsg
+dependencies[] = url_formatter
+
+; Information added by drupal.org packaging script on 2013-10-01
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "url_formatter_privatemsg"
+datestamp = "1380642846"
+
+
+; Information added by drupal.org packaging script on 2013-10-27
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "async_drupal"
+datestamp = "1382874927"
+
