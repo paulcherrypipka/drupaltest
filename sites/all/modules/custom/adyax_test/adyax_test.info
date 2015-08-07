@@ -3,3 +3,4 @@ description = CCT plugin for Adyax Test
 core = 7.x
 
 dependencies[] = ctools
+dependencies[] = panels

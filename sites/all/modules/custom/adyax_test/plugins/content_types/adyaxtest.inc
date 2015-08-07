@@ -51,7 +51,6 @@ function adyax_test_adyaxtest_theme(&$theme, $plugin) {
  * Get three rendered random nodes.
  */
 function _adyax_test_get_rendered_random_nodes($max) {
-  $rendered_nodes = array();
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->condition('n.status', 1, '=')

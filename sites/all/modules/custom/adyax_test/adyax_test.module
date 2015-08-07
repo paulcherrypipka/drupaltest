@@ -16,12 +16,24 @@ function adyax_test_ctools_plugin_directory($module, $plugin) {
   if ($module == 'ctools' && in_array($plugin, array('content_types'))) {
     return 'plugins/' . $plugin;
   }
-}
-
-function adyax_test_preprocess_adyax_test_adyaxtheme(&$vars) {
-  if (is_numeric($vars['border_width'])) {
-    $vars['attributes_array'] = array(
-      'style' => 'border: ' . $vars['border_width'] . 'px solid gray!important; border-radius: 10px!important;',
-    );
+  if ($module == 'panels' && in_array($plugin, array('styles'))) {
+    return 'plugins/' . $plugin;
   }
 }
+
+//function adyax_test_ctools_plugin_type() {
+//  return array(
+//    'styles' => array(
+//      'load themes' => TRUE,
+//      'child plugins' => TRUE,
+//    ),
+//  );
+//}
+
+//function adyax_test_preprocess_adyax_test_adyaxtheme(&$vars) {
+//  if (is_numeric($vars['border_width'])) {
+//    $vars['attributes_array'] = array(
+//      'style' => 'border: ' . $vars['border_width'] . 'px solid gray!important; border-radius: 10px!important;',
+//    );
+//  }
+//}
