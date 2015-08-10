@@ -10,7 +10,6 @@ function adyax_test_adyaxtest_ctools_content_types() {
     'content_types' => 'adyaxtest',
     'description' => t('Adyax test CCT'),
     'render callback' => 'adyax_test_adyaxtest_content_type_render',
-    //'edit form' => 'adyax_test_adyaxtest_content_type_edit_form',
     'category' => t('Adyaxtest'),
     'all contexts' => TRUE,
     'hook theme' => 'adyax_test_adyaxtest_theme',
@@ -28,7 +27,6 @@ function adyax_test_adyaxtest_content_type_render($subtype, $conf, $panel_args, 
   $block->content = array(
     '#theme' => 'adyax_test_adyaxtheme',
     '#nodes' => $rendered_nodes,
-    //'#border_width' => $conf['border_width'],
   );
   return $block;
 }
@@ -42,7 +40,6 @@ function adyax_test_adyaxtest_theme(&$theme, $plugin) {
     'template' => 'adyax-test',
     'variables' => array(
       'nodes' => array(),
-      //'border_width' => NULL,
     ),
   );
 }
@@ -68,29 +65,3 @@ function _adyax_test_get_rendered_random_nodes($max) {
   }
   return $rendered_nodes;
 }
-
-/**
- * Callback for build settings form.
- */
-//function adyax_test_adyaxtest_content_type_edit_form($form, &$form_state) {
-//  $conf = $form_state['conf'];
-//  $form['border_width'] = array(
-//    '#type'    => 'textfield',
-//    '#title'   => t('Border width'),
-//    '#required' => TRUE,
-//    '#default_value' => (isset($conf['border_width'])) ? $conf['border_width'] : 1,
-//  );
-//  return $form;
-//}
-
-//function adyax_test_adyaxtest_content_type_edit_form_submit(&$form, &$form_state) {
-//  foreach (array_keys($form_state['plugin']['defaults']) as $key) {
-//    $form_state['conf'][$key] = $form_state['values'][$key];
-//  }
-//}
-
-//function adyax_test_adyaxtest_content_type_edit_form_validate(&$form, &$form_state) {
-//  if (!is_numeric($form_state['values']['border_width'])) {
-//    form_set_error('edit-border-width', t('Border width value must be a numeric value'));
-//  }
-//}
