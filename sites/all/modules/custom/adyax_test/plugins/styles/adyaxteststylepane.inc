@@ -35,7 +35,7 @@ function theme_adyax_test_adyaxteststylepane_render_pane($vars) {
   }
 
   $border_width_pane = 0;
-  if (isset($pane->style['settings']['border_width_pane'])) {
+  if (isset($pane->style['settings']['border_width_pane']) && is_numeric($pane->style['settings']['border_width_pane'])) {
     $border_width_pane = $pane->style['settings']['border_width_pane'];
   }
 
@@ -55,9 +55,12 @@ function adyax_test_adyaxteststylepane_style_settings_form($style_settings) {
     '#required' => TRUE,
     '#default_value' => (isset($style_settings['border_width_pane'])) ? $style_settings['border_width_pane'] : '',
   );
+  $form['#validate'][] = 'adyax_test_adyaxteststylepane_style_settings_form_validate';
   return $form;
 }
 
-function adyax_test_adyaxteststylepane_style_settings_form_submit($form, &$form_state) {
-
+function adyax_test_adyaxteststylepane_style_settings_form_validate(&$form, &$form_state) {
+  if (!is_numeric($form_state['values']['border_width_pane'])) {
+    form_set_error('edit-settings-border-width-pane', t('Border width value must be a numeric value'));
+  }
 }

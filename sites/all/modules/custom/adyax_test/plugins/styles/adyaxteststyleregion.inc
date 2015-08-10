@@ -26,7 +26,7 @@ function adyax_test_adyaxteststyleregion_panels_styles() {
  */
 function theme_adyax_test_adyaxteststyleregion_render_region($vars) {
   $border_width_region = 0;
-  if (isset($vars['settings']['border_width_region'])) {
+  if (isset($vars['settings']['border_width_region']) && is_numeric($vars['settings']['border_width_region'])) {
     $border_width_region = $vars['settings']['border_width_region'];
   }
 
@@ -46,9 +46,12 @@ function adyax_test_adyaxteststyleregion_style_settings_form($style_settings) {
     '#required' => TRUE,
     '#default_value' => (isset($style_settings['border_width_region'])) ? $style_settings['border_width_region'] : '',
   );
+  $form['#validate'][] = 'adyax_test_adyaxteststyleregion_style_settings_form_validate';
   return $form;
 }
 
-function adyax_test_adyaxteststyleregion_style_settings_form_submit($form, &$form_state) {
-
+function adyax_test_adyaxteststyleregion_style_settings_form_validate(&$form, &$form_state) {
+  if (!is_numeric($form_state['values']['border_width_region'])) {
+    form_set_error('edit-settings-border-width-region', t('Border width value must be a numeric value'));
+  }
 }
